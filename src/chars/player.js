@@ -4,14 +4,24 @@
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
+let keyMap = [];
+document.addEventListener("keydown", onDocumentKeyDown, true); 
+document.addEventListener("keyup", onDocumentKeyUp, true);
 class Player {
     
+
     constructor( scene )
     {
        
         let myPlayer = this;
         const loader = new GLTFLoader();
+        
+       
+        myPlayer.xSpeed = 0.4;
+        myPlayer.zSpeed = 0.4;
+        myPlayer.keyMap = [];
 
+        
         loader.load( '/assets/animating_warlock.glb', function ( object ) {
 
             myPlayer.mixer = new THREE.AnimationMixer( object.scene );
@@ -41,24 +51,44 @@ class Player {
 			{
 				this.mixer.update( deltaTime );
 			} 
-    }
+    };
+
+    //movement
+    
+  
+    MovePlayer(){
+        
+        if (keyMap[87]) {
+            //cube.position.z -= this.zSpeed;
+            this.model.position.z -= this.zSpeed
+        } 
+        if (keyMap[83]) {
+            //cube.position.z += this.zSpeed;
+            this.model.position.z += this.zSpeed
+        } 
+        if (keyMap[65]) {
+            //cube.position.x -= this.xSpeed;
+            this.model.position.x -= this.xSpeed
+        }
+        if (keyMap[68]) {
+            //cube.position.x += this.xSpeed;
+            this.model.position.x += this.xSpeed
+        } 
+        if (keyMap[32]) {
+            //cube.position.set(-.2,.5,0)
+            this.model.position.set(-.2,.5,0)
+        }
+    };
 
 }
 
 export {Player};
 
-/* let playerMesh;
-let mixer;
-let clips;
-
-export function initPlayerMesh(){
-    playerMesh = getPlayerMesh();
-    mixer = new THREE.AnimationMixer(playerMesh)
-    clips = playerMesh.animations;
+function onDocumentKeyDown(event){ 
+    let keyCode = event.keyCode;
+    keyMap[keyCode] = true;
 }
-export function updateAnims() {
-    //mixer.update(deltaSeconds);
-    const clip = THREE.AnimationClip.findByName( clips, 'idle' );
-    const action = mixer.clipAction( clip );
-    action.play();
-} */
+function onDocumentKeyUp(event){
+    let keyCode = event.keyCode;
+    keyMap[keyCode] = false;
+}

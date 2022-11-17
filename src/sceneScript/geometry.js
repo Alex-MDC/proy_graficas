@@ -30,8 +30,8 @@ export function animateGeometry(camera) {
     cube2.rotation.x += 0.02;
     cube2.rotation.y += 0.02;
     cube3.rotation.y-=.005
-    camera.lookAt(cube.position)
-    camera.position.x=cube.position.x
+    //camera.lookAt(cube.position)
+    //camera.position.x=cube.position.x
 }
 
 export function cubePosition() {

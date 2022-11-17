@@ -39,19 +39,25 @@ scene.add( light );
 
 //init player
 let player = new Player(scene);
+
 //animate and render
 function animate() {
     requestAnimationFrame( animate );
     animateGeometry(camera)
-    let cube = getCube()
-    light.position.x=cube.position.x
-    light.position.z=cube.position.z
-    light.lookAt(cubePosition())
     
+  
+    //set light to follow player
+    light.position.x=player.model.position.x
+    light.position.z=player.model.position.z
+    light.lookAt(player.model.position)
+    //move camera
+    camera.lookAt(player.model.position)
+    camera.position.x=player.model.position.x
     renderer.render( scene, camera );
-    executeMovement(getCube());
+    
+    player.MovePlayer()
     //upate animations 
-   player.update()
+    player.update()
 }
 
 
