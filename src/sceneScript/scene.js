@@ -57,7 +57,7 @@ function animate() {
     
     player.MovePlayer()
     //upate animations 
-    player.update()
+    //player.update()
 }
 
 
