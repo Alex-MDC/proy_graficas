@@ -1,5 +1,5 @@
 
-import { getPlayerMesh } from "../loader/3dloader.js";
+
 
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';

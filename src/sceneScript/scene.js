@@ -3,8 +3,8 @@
 import * as THREE from 'three'
 import { createGeometry,animateGeometry, cubePosition, getCube } from "./geometry.js";
 import { executeMovement } from "./movement.js";
-import { updateAnims } from '../animation/playerAnim.js';
-import { initPlayerModel } from '../loader/3dloader.js';
+
+
 import { Player } from '../chars/player.js';
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera( 80, window.innerWidth / window.innerHeight, 0.1, 2000 );
@@ -38,8 +38,6 @@ light.position.set( 10, 10, 0 );
 scene.add( light );
 
 //init player
-//initPlayerModel();
-
 let player = new Player(scene);
 //animate and render
 function animate() {
@@ -52,7 +50,7 @@ function animate() {
     
     renderer.render( scene, camera );
     executeMovement(getCube());
-   // updateAnims()
+    //upate animations 
    player.update()
 }
 
