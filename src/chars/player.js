@@ -25,7 +25,7 @@ class Player {
 
 
             myPlayer.model = object.scene;
-
+            myPlayer.model.rotateY(1)
            /*  let objMatrix = new THREE.Matrix4();
             objMatrix.makeScale( 0.01,0.01,0.01);
             myPlayer.model.applyMatrix4( objMatrix );
