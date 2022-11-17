@@ -1,4 +1,6 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js";
+/* import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js";
+ */
+import * as THREE from 'three'
 import { createGeometry,animateGeometry, cubePosition, getCube } from "./geometry.js";
 import { executeMovement } from "./movement.js";
 const scene = new THREE.Scene();
@@ -34,7 +36,7 @@ scene.add( light );
 
 //animate and render
 function animate() {
-    requestAnimationFrame( animate );
+    
     animateGeometry(camera)
     let cube = getCube()
     light.position.x=cube.position.x
@@ -42,6 +44,7 @@ function animate() {
     light.lookAt(cubePosition())
     
     renderer.render( scene, camera );
+    requestAnimationFrame( animate );
     executeMovement(getCube());
 }
 
