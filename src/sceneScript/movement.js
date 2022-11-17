@@ -1,5 +1,6 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js";
-
+/* import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js";
+ */
+import * as THREE from 'three'
 
 const xSpeed = 0.4;
 const zSpeed = .4;

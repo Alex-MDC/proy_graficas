@@ -1,4 +1,6 @@
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js";
+/* import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.121.1/build/three.module.js";
+ */
+import * as THREE from 'three'
 
 let cube,cube2,cube3
 export function createGeometry(scene){
