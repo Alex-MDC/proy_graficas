@@ -13,7 +13,7 @@ const scene = new THREE.Scene()
 scene.background = null
 
 //Camera
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000)
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,2000)
 camera.position.set(0, 2, 10)
 
 //Renderer
@@ -111,10 +111,10 @@ let playerParticles = createPlayerParticles();
 function createPlayerParticles() : PlayerParticles {
     const sprite = textureLoader.load("./textures/particles/spark1.png");
     const geometry = new THREE.BufferGeometry();
-    const particlesCount = 20;
+    const particlesCount = 15;
     playerParticles = new PlayerParticles(sprite,geometry,particlesCount);
     playerParticles.parameters = [
-        [[ 1.0, 0.2, 0.5 ], sprite, .5 ]
+        [[ 1.0, 0.2, 0.5 ], sprite, 2 ]
     ];
     playerParticles.materials = [];
     for ( let i = 0; i < playerParticles.parameters.length; i ++ ) {

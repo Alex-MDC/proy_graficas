@@ -37,7 +37,7 @@ export class Player extends Model{
 
 
     public update(delta:number, keysPressed:any) : void{
-        const directionPressed = ['w','a','s','d'].some(key => keysPressed[key] == true)
+        const directionPressed = ['w','a','s','d','l'].some(key => keysPressed[key] == true)
         let play = ''
         if (directionPressed && this.toggleRun) {
             play = 'walk'

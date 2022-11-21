@@ -70,16 +70,13 @@ export class PlayerParticles
                 position[i*3] =player.getPosition().x;
                 position[i*3+1] = player.getPosition().y;
                 position[i*3+2] = player.getPosition().z;
-                // position[i*3] = myPlayerShip.birdyShip.position.x;
-                // position[i*3+1] = myPlayerShip.birdyShip.position.y;
-                // position[i*3+2] = myPlayerShip.birdyShip.position.z;
 
                 let maxTime = .25;
                 let timeLeft = (maxTime - this.particleTimers[i]);
 
                 position[i*3] += timeLeft*this.particleOffsets[i].x + .05 - .1*Math.random();
-                position[i*3+1] += timeLeft*this.particleOffsets[i].y + .01 - .02*Math.random();
-                position[i*3+2] += timeLeft*this.particleOffsets[i].z + .05 - .1*Math.random();
+                //position[i*3+1] += timeLeft*this.particleOffsets[i].y + .01 - .02*Math.random();
+                //position[i*3+2] += timeLeft*this.particleOffsets[i].z + .05 - .1*Math.random();
 
                 if ( this.particleTimers[i] <= 0.0 )
                 {
@@ -90,8 +87,9 @@ export class PlayerParticles
                     let zAxis=new THREE.Vector3();
                     player.matrix.extractBasis(xAxis,yAxis,zAxis);
                     this.particleOffsets[i].set(0,0,0);
-                    this.particleOffsets[i].addScaledVector( xAxis, -20 );
-                    this.particleOffsets[i].addScaledVector( zAxis, -20 + 40*Math.random() );
+                    this.particleOffsets[i].addScaledVector( xAxis, -9 );
+                    this.particleOffsets[i].addScaledVector( yAxis, 6 );
+                    this.particleOffsets[i].addScaledVector( zAxis, -2 + 40*Math.random() );
     
                 }
             }
