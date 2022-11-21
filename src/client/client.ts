@@ -6,9 +6,11 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {  GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import CannonDebugRenderer from './utils/cannonDebugRenderer'
 import CannonUtils from './utils/cannonUtils'
+import { MySkybox } from './classes/MySkybox'
+import { PlayerParticles } from './classes/PlayerParticles'
 //Scene
 const scene = new THREE.Scene()
-scene.background = new THREE.Color(0xa8def0);
+scene.background = null
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,1000)
@@ -21,6 +23,8 @@ renderer.setPixelRatio(window.devicePixelRatio)
 document.body.appendChild(renderer.domElement)
 renderer.shadowMap.enabled = true
 
+//Skybox
+let mySkybox = new MySkybox( scene );
 //World
 const world = new CANNON.World()
 world.gravity.set(0, -9.82, 0)
@@ -65,8 +69,10 @@ function animate() : void {
     // checkForTarget()
 
     player ? player.update(delta,keysPressed) : null
+    playerParticles ? playerParticles.update(player,delta) : null
     cannonDebugRenderer.update()
     orbitControls.update()
+    mySkybox.update( camera );
     renderer.render(scene, camera)
     requestAnimationFrame(animate)
 }
@@ -92,9 +98,34 @@ function createPlayer() : Player {
         scene.add(model)
         world.addBody(body)
         player = new Player(model,mixer,animationMap,'idle',body)
+        player.gltfObject = gltf;
         }
     )
     return player
+}
+
+let playerParticles = createPlayerParticles();
+//player particles
+function createPlayerParticles() : PlayerParticles {
+    const sprite = textureLoader.load("./textures/particles/spark1.png");
+    const geometry = new THREE.BufferGeometry();
+    const particlesCount = 20;
+    playerParticles = new PlayerParticles(sprite,geometry,particlesCount);
+    playerParticles.parameters = [
+        [[ 1.0, 0.2, 0.5 ], sprite, .5 ]
+    ];
+    playerParticles.materials = [];
+    for ( let i = 0; i < playerParticles.parameters.length; i ++ ) {
+        const color = playerParticles.parameters[ i ][ 0 ];
+        const sprite = playerParticles.parameters[ i ][ 1 ];
+        const size = playerParticles.parameters[ i ][ 2 ];
+
+        playerParticles.materials[ i ] = new THREE.PointsMaterial( { size: size, map: sprite, blending: THREE.AdditiveBlending, depthTest: false, transparent: true } );
+        playerParticles.materials[ i ].color.setHSL( color[ 0 ], color[ 1 ], color[ 2 ] );
+        playerParticles.particles = new THREE.Points( playerParticles.geometry, playerParticles.materials[ i ] );
+        scene.add( playerParticles.particles );
+    }
+   return playerParticles;
 }
 
 // Plane

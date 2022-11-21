@@ -10,6 +10,8 @@ export class Player extends Model{
     private readonly walkVelocity:number = .1
     private toggleRun: boolean = true
     private shooting: boolean = false
+    //gltf object
+    public gltfObject: any;
     
     
 
