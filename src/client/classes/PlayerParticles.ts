@@ -4,7 +4,7 @@ import * as THREE from 'three';
 
 export class PlayerParticles
 {
-    public vertices: number[][]=[];
+    public vertices: number[]=[];
     public particleTimers: number[] = [];
     public particleOffsets: THREE.Vector3[]=[];
     public parameters: any[]=[]; 
@@ -62,13 +62,14 @@ export class PlayerParticles
 
         if ( player )
         {
+            
             for ( let i = 0; i < this.particlesCount; i++ ) 
             {
                 this.particleTimers[i] -= delta;
 
-                position[i*3] = this.vertices[i][0];
-                position[i*3+1] = this.vertices[i][1];
-                position[i*3+2] = this.vertices[i][2];
+                position[i*3] =player.getPosition().x;
+                position[i*3+1] = player.getPosition().y;
+                position[i*3+2] = player.getPosition().z;
                 // position[i*3] = myPlayerShip.birdyShip.position.x;
                 // position[i*3+1] = myPlayerShip.birdyShip.position.y;
                 // position[i*3+2] = myPlayerShip.birdyShip.position.z;
@@ -87,12 +88,9 @@ export class PlayerParticles
                     let xAxis=new THREE.Vector3();
                     let yAxis=new THREE.Vector3();
                     let zAxis=new THREE.Vector3();
-                    //myPlayerShip.birdyShip = gltf
-                    //myPlayerShip.birdyShip.matrix.extractBasis(xAxis,yAxis,zAxis);
-                    player.gltfObject.matrix.extractBasis(xAxis,yAxis,zAxis);
-    
+                    player.matrix.extractBasis(xAxis,yAxis,zAxis);
                     this.particleOffsets[i].set(0,0,0);
-                    this.particleOffsets[i].addScaledVector( xAxis, -200 );
+                    this.particleOffsets[i].addScaledVector( xAxis, -20 );
                     this.particleOffsets[i].addScaledVector( zAxis, -20 + 40*Math.random() );
     
                 }

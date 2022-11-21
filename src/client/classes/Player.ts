@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
 
 import { Model } from './Model'
+import { Matrix4 } from 'three'
 
 export class Player extends Model{
     private readonly name: string = "Warlock"
@@ -12,6 +13,7 @@ export class Player extends Model{
     private shooting: boolean = false
     //gltf object
     public gltfObject: any;
+    public matrix: THREE.Matrix4 = new Matrix4
     
     
 
@@ -78,6 +80,10 @@ export class Player extends Model{
             this.body.position.x,
             this.body.position.y-2,
             this.body.position.z)
+    }
+
+    public getPosition():CANNON.Vec3 {
+        return this.body.position;
     }
 
 }

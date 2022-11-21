@@ -98,9 +98,11 @@ function createPlayer() : Player {
         scene.add(model)
         world.addBody(body)
         player = new Player(model,mixer,animationMap,'idle',body)
-        player.gltfObject = gltf;
+        player.matrix = gltf.scene.matrix;
+        console.log(player.matrix)
         }
     )
+    
     return player
 }
 
