@@ -70,7 +70,7 @@ function animate() : void {
 
    // player ? player.update(delta,keysPressed) : null
     player ? player.update(delta,keysPressed,mouseButtonsPressed) : null
-    playerParticles ? playerParticles.update(player,delta) : null
+    player ? playerParticles.update(player,delta) : null
     cannonDebugRenderer.update()
     orbitControls.update()
     mySkybox.update( camera );
@@ -100,7 +100,7 @@ function createPlayer() : Player {
         world.addBody(body)
         player = new Player(model,mixer,animationMap,'idle',body)
         player.matrix = gltf.scene.matrix;
-        console.log(player.matrix)
+       // console.log(player.matrix)
         }
     )
     
@@ -110,7 +110,7 @@ function createPlayer() : Player {
 let playerParticles = createPlayerParticles();
 //player particles
 function createPlayerParticles() : PlayerParticles {
-    const sprite = textureLoader.load("./textures/particles/spark1.png");
+    const sprite = textureLoader.load("./textures/particles/shadestrike.png");
     const geometry = new THREE.BufferGeometry();
     const particlesCount = 15;
     playerParticles = new PlayerParticles(sprite,geometry,particlesCount);

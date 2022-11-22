@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { Player } from './Player';
 
 
 
@@ -48,7 +49,7 @@ export class PlayerParticles
         
     
 
-    public update( player:any, delta:number ) :void
+    public update( player:Player, delta:number ) :void
     {
         for ( let i = 0; i < this.materials.length; i ++ ) {
 
@@ -76,7 +77,7 @@ export class PlayerParticles
 
                 position[i*3] += timeLeft*this.particleOffsets[i].x + .05 - .1*Math.random();
                 //position[i*3+1] += timeLeft*this.particleOffsets[i].y + .01 - .02*Math.random();
-                //position[i*3+2] += timeLeft*this.particleOffsets[i].z + .05 - .1*Math.random();
+                position[i*3+2] += timeLeft*this.particleOffsets[i].z + .05 - .1*Math.random();
 
                 if ( this.particleTimers[i] <= 0.0 )
                 {
@@ -94,6 +95,12 @@ export class PlayerParticles
                 }
             }
         }
+       /*  else {
+            for ( let i = 0; i < this.particlesCount; i++ ) 
+            {
+                this.particleTimers[i] = 0;
+            }
+        } */
 
         this.geometry.attributes.position.needsUpdate = true;
     }

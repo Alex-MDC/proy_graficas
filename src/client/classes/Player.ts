@@ -16,7 +16,7 @@ export class Player extends Model{
     public matrix: THREE.Matrix4 = new Matrix4
     //animation durations
     private readonly attack1Hduration: number = 800
-    private timeAttacking =0;
+    private timeAttacking =1.9;
 
     constructor(
         model: THREE.Group, 
@@ -52,14 +52,25 @@ export class Player extends Model{
             play = 'run.001' //walking
         } else if(attack_1){
             // 1h_attack
-            console.log("1H_attack")
             play = '1H_attack'
-            this.timeAttacking +=100
-            console.log(this.timeAttacking);
-            if(this.timeAttacking >=800) {
-                this.timeAttacking =0;
-                this.switchShooting();
+           // this.timeAttacking +=100
+           //set player to shoot after certain time has passed, this will generate the particles too
+
+            this.timeAttacking -= delta;
+            console.log('time attacking : ',this.timeAttacking);
+            if(this.timeAttacking <=0 ) {
+               // this.switchShooting();
+                this.shooting = true;
+                console.log('shooting : ',this.shooting);
+                this.timeAttacking =2.1
+            } 
+            //need to turn the next into a delay of its own or asynch
+            if(this.timeAttacking >= 2.1 && this.shooting) {
+
+                //this.switchShooting()
+                console.log('switched shoot to : ',this.shooting);
             }
+           // if(this.shooting)
           //  this.switchShooting();
         }
         else if(attack_2){
