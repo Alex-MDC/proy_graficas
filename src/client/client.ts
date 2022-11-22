@@ -68,7 +68,8 @@ function animate() : void {
     world.step(Math.min(delta, 0.1))
     // checkForTarget()
 
-    player ? player.update(delta,keysPressed) : null
+   // player ? player.update(delta,keysPressed) : null
+    player ? player.update(delta,keysPressed,mouseButtonsPressed) : null
     playerParticles ? playerParticles.update(player,delta) : null
     cannonDebugRenderer.update()
     orbitControls.update()
@@ -194,15 +195,45 @@ window.addEventListener("keydown", (event) => {
     }else{
         (keysPressed as any)[event.key.toLowerCase()] = true
     }
+    console.log(keysPressed)
     event.preventDefault();
+    
 }, false)
 document.addEventListener('keyup', (event) => {
     (keysPressed as any)[event.key.toLowerCase()] = false
 }, false)
-window.addEventListener('mousedown',(e)=>{
-    setTimeout(function() {
-        console.log('hi')
+const mouseButtonsPressed ={ }
 
-      }, 500);
+let actionTimeout =500;
+window.addEventListener('mousedown',(e)=>{
+    //0: left mouse
+    //1: mouse wheel down
+    //2: right mouse
+     (mouseButtonsPressed as any)[e.button.valueOf()] = true
+     if(e.button.valueOf() == 0) {
+        //timeout was intended to lock player into an animation
+        //actionTimeout = 800
+     } else if (e.button.valueOf() == 2) {
+        //actionTimeout = 1000
+     }
+     console.log(mouseButtonsPressed)
+    e.preventDefault();
+
+    
 })
+window.addEventListener('mouseup',(e)=>{
+    //0: left mouse
+    //1: mouse wheel down
+    //2: right mouse
+   // (mouseButtonsPressed as any)[e.button.valueOf()] = false
+   // console.log(mouseButtonsPressed)
+       setTimeout(function() {
+        console.log('hi');
+        (mouseButtonsPressed as any)[e.button.valueOf()] = false
+         console.log(mouseButtonsPressed)    
+        }, 0); //the zero used to be the actionTimeout var
+    e.preventDefault();
+    
+})
+
 

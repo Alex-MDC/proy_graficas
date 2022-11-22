@@ -14,8 +14,9 @@ export class Player extends Model{
     //gltf object
     public gltfObject: any;
     public matrix: THREE.Matrix4 = new Matrix4
-    
-    
+    //animation durations
+    private readonly attack1Hduration: number = 800
+    private timeAttacking =0;
 
     constructor(
         model: THREE.Group, 
@@ -32,19 +33,42 @@ export class Player extends Model{
     }
 
     public switchShooting() : void {
-        this.toggleRun = !this.toggleRun
+        this.shooting = !this.shooting
+    }
+    public getShooting():boolean{
+        return this.shooting
     }
 
 
-    public update(delta:number, keysPressed:any) : void{
-        const directionPressed = ['w','a','s','d','l'].some(key => keysPressed[key] == true)
-        let play = ''
+    public update(delta:number, keysPressed:any, mouseButtonsPressed:any) : void{
+        const directionPressed = ['w','a','s','d'].some(key => keysPressed[key] == true)
+        const attack_1 =['0'].some(key => mouseButtonsPressed[key] == true)
+        const attack_2 =['2'].some(key => mouseButtonsPressed[key] == true)
+        //attack press
+        let play = '' //current anim
         if (directionPressed && this.toggleRun) {
             play = 'walk'
         } else if (directionPressed) {
             play = 'run.001' //walking
-        } else {
+        } else if(attack_1){
+            // 1h_attack
+            console.log("1H_attack")
+            play = '1H_attack'
+            this.timeAttacking +=100
+            console.log(this.timeAttacking);
+            if(this.timeAttacking >=800) {
+                this.timeAttacking =0;
+                this.switchShooting();
+            }
+          //  this.switchShooting();
+        }
+        else if(attack_2){
+            console.log("2H_attack")
+            play = '2H_attack'
+        }
+        else {
             play = 'idle'
+            this.timeAttacking =0;
         }
         if (this.currentAction != play) {
             const toPlay= this.animationsMap.get(play)
@@ -52,6 +76,18 @@ export class Player extends Model{
 
             current?.fadeOut(this.fadeDuration)
             toPlay?.reset().fadeIn(this.fadeDuration).play()
+            //attempted to make a one time looping animation unsuccsefully, the shoot toggle updates too often most likely
+           /*  if(this.shooting){
+               // toPlay?.reset().fadeIn(this.attack1Hduration).play()
+                //toPlay?.fadeIn(this.attack1Hduration).play()
+                if (toPlay != undefined) {
+                    toPlay.setLoop(THREE.LoopOnce,1).fadeIn(this.attack1Hduration).clampWhenFinished=true;
+                    toPlay.play()
+                }
+                this.switchShooting()
+            } else {
+                toPlay?.reset().fadeIn(this.fadeDuration).play()
+            } */
             this.currentAction = play
         }
         this.mixer.update(delta)

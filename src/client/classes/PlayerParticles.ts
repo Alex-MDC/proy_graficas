@@ -12,7 +12,7 @@ export class PlayerParticles
     public geometry: any;
     public particles: THREE.Points<any, any> | undefined;
     public particlesCount: number;
-    private toggleOn: boolean = true;
+    public toggleOn: boolean = true;
 
     constructor(
         sprite: THREE.Texture,
@@ -60,7 +60,7 @@ export class PlayerParticles
         }
         const position = this.geometry.attributes.position.array;
 
-        if ( player )
+        if ( player.getShooting() )
         {
             
             for ( let i = 0; i < this.particlesCount; i++ ) 
