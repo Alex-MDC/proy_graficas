@@ -7,8 +7,8 @@ import { Matrix4 } from 'three'
 export class Player extends Model{
     private readonly name: string = "Warlock"
     private readonly fadeDuration: number = .2
-    private readonly runVelocity:number = .4
-    private readonly walkVelocity:number = .1
+    private readonly runVelocity:number = .7
+    private readonly walkVelocity:number = .3
     private toggleRun: boolean = true
     private shooting: boolean = false
     //gltf object
@@ -16,7 +16,9 @@ export class Player extends Model{
     public matrix: THREE.Matrix4 = new Matrix4
     //animation durations
     private readonly attack1Hduration: number = 800
-    private timeAttacking =1.9;
+    private timeAttacking =5000;
+    private boundCastA = this.castA.bind(this);
+    private boundswitcShooting = this.switchShooting.bind(this)
 
     constructor(
         model: THREE.Group, 
@@ -33,7 +35,8 @@ export class Player extends Model{
     }
 
     public switchShooting() : void {
-        this.shooting = !this.shooting
+        this.shooting = !this.shooting;
+        console.log('shoot toggle')
     }
     public getShooting():boolean{
         return this.shooting
@@ -42,44 +45,28 @@ export class Player extends Model{
 
     public update(delta:number, keysPressed:any, mouseButtonsPressed:any) : void{
         const directionPressed = ['w','a','s','d'].some(key => keysPressed[key] == true)
-        const attack_1 =['0'].some(key => mouseButtonsPressed[key] == true)
-        const attack_2 =['2'].some(key => mouseButtonsPressed[key] == true)
+        let attack_1 =['0'].some(key => mouseButtonsPressed[key] == true)
+        let attack_2 =['2'].some(key => mouseButtonsPressed[key] == true)
         //attack press
         let play = '' //current anim
         if (directionPressed && this.toggleRun) {
             play = 'walk'
         } else if (directionPressed) {
             play = 'run.001' //walking
-        } else if(attack_1){
+        } else if(attack_1 ){
             // 1h_attack
             play = '1H_attack'
-           // this.timeAttacking +=100
-           //set player to shoot after certain time has passed, this will generate the particles too
-
-            this.timeAttacking -= delta;
-            console.log('time attacking : ',this.timeAttacking);
-            if(this.timeAttacking <=0 ) {
-               // this.switchShooting();
-                this.shooting = true;
-                console.log('shooting : ',this.shooting);
-                this.timeAttacking =2.1
-            } 
-            //need to turn the next into a delay of its own or asynch
-            if(this.timeAttacking >= 2.1 && this.shooting) {
-
-                //this.switchShooting()
-                console.log('switched shoot to : ',this.shooting);
-            }
-           // if(this.shooting)
-          //  this.switchShooting();
+            //play attack only if casting is done fully
+          this.mixer.addEventListener( 'loop', this.boundCastA)
         }
         else if(attack_2){
-            console.log("2H_attack")
             play = '2H_attack'
+            //this.castA()
         }
         else {
             play = 'idle'
             this.timeAttacking =0;
+            
         }
         if (this.currentAction != play) {
             const toPlay= this.animationsMap.get(play)
@@ -87,18 +74,6 @@ export class Player extends Model{
 
             current?.fadeOut(this.fadeDuration)
             toPlay?.reset().fadeIn(this.fadeDuration).play()
-            //attempted to make a one time looping animation unsuccsefully, the shoot toggle updates too often most likely
-           /*  if(this.shooting){
-               // toPlay?.reset().fadeIn(this.attack1Hduration).play()
-                //toPlay?.fadeIn(this.attack1Hduration).play()
-                if (toPlay != undefined) {
-                    toPlay.setLoop(THREE.LoopOnce,1).fadeIn(this.attack1Hduration).clampWhenFinished=true;
-                    toPlay.play()
-                }
-                this.switchShooting()
-            } else {
-                toPlay?.reset().fadeIn(this.fadeDuration).play()
-            } */
             this.currentAction = play
         }
         this.mixer.update(delta)
@@ -127,10 +102,22 @@ export class Player extends Model{
             this.body.position.x,
             this.body.position.y-2,
             this.body.position.z)
+        this.mixer.removeEventListener('loop',this.boundCastA)
     }
 
     public getPosition():CANNON.Vec3 {
         return this.body.position;
+    }
+    public getModel(): THREE.Group {
+        return this.model
+    }
+
+    //HAPPENS on full attack animation
+    public castA(): void {
+        console.log('function cast called',this.currentAction)
+        this.switchShooting()
+        setTimeout(this.boundswitcShooting, 500); 
+        
     }
 
 }

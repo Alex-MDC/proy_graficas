@@ -14,7 +14,7 @@ scene.background = null
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,2000)
-camera.position.set(0, 2, 10)
+camera.position.set(0, 5, 10)
 
 //Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -74,6 +74,9 @@ function animate() : void {
     cannonDebugRenderer.update()
     orbitControls.update()
     mySkybox.update( camera );
+    // player ? camera.position.x = player.getModel().position.x : null
+    // player ? console.log(player.getModel().position.x) :null
+    // player ? camera.lookAt(player.getModel().position) :null
     renderer.render(scene, camera)
     requestAnimationFrame(animate)
 }
@@ -139,7 +142,7 @@ function createPlane() : void {
     const soilRoughness = textureLoader.load("./textures/soil/Rock_Moss_001_roughness.jpg");
     const soilAmbientOcclusion = textureLoader.load("./textures/soil/Rock_Moss_001_ambientOcclusion.jpg");
 
-    const geometrySoil = new THREE.PlaneGeometry(25, 10,200,200)
+    const geometrySoil = new THREE.PlaneGeometry(250, 100,200,200)
     const planeSoil = new THREE.Mesh(geometrySoil, new THREE.MeshStandardMaterial({
         map: soilBaseColor,
         normalMap: soilNormalMap,
@@ -195,7 +198,7 @@ window.addEventListener("keydown", (event) => {
     }else{
         (keysPressed as any)[event.key.toLowerCase()] = true
     }
-    console.log(keysPressed)
+    
     event.preventDefault();
     
 }, false)
@@ -216,7 +219,7 @@ window.addEventListener('mousedown',(e)=>{
      } else if (e.button.valueOf() == 2) {
         //actionTimeout = 1000
      }
-     console.log(mouseButtonsPressed)
+     //console.log(mouseButtonsPressed)
     e.preventDefault();
 
     
@@ -228,9 +231,9 @@ window.addEventListener('mouseup',(e)=>{
    // (mouseButtonsPressed as any)[e.button.valueOf()] = false
    // console.log(mouseButtonsPressed)
        setTimeout(function() {
-        console.log('hi');
+        //console.log('hi');
         (mouseButtonsPressed as any)[e.button.valueOf()] = false
-         console.log(mouseButtonsPressed)    
+         //console.log(mouseButtonsPressed)    
         }, 0); //the zero used to be the actionTimeout var
     e.preventDefault();
     

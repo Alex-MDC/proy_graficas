@@ -94,13 +94,15 @@ export class PlayerParticles
     
                 }
             }
-        }
-       /*  else {
+        } else {
+            //hide the sprites elsewhere, cant remove currently
             for ( let i = 0; i < this.particlesCount; i++ ) 
             {
-                this.particleTimers[i] = 0;
+                position[i*3] = 0
+                position[i*3+1] = -50
+                position[i*3+2] = 0
             }
-        } */
+        }
 
         this.geometry.attributes.position.needsUpdate = true;
     }
