@@ -13,6 +13,7 @@ export class Player extends Model{
     private readonly walkVelocity:number = .1
     private toggleRun: boolean = true
     private isShooting: boolean = false
+    private matrix: THREE.Matrix4;
     private bullets : bullet[]  = new Array(100).fill({
         shape: new THREE.Mesh( new THREE.SphereGeometry(0.2), new THREE.MeshBasicMaterial({ color: 0x005ce6 })),
         body: new CANNON.Body({ mass: 1, shape: new CANNON.Sphere(0.2)}),
@@ -26,9 +27,11 @@ export class Player extends Model{
         mixer: THREE.AnimationMixer,  
         animationsMap: Map<string, THREE.AnimationAction>,
         currentAction: string,
-        body: CANNON.Body
+        body: CANNON.Body,
+        matrix: THREE.Matrix4
         ){
         super(model,mixer,animationsMap,currentAction,body)
+        this.matrix = matrix
     }
 
     public getBullets() : bullet[] {

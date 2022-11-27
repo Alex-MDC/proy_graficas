@@ -94,7 +94,8 @@ function createPlayer() : Player {
         model.traverse((object: any)=>{if(object.isMesh) object.castShadow = true})
         app.scene.add(model)
         app.world.addBody(body)
-        player = new Player(model,mixer,animationMap,'idle',body)
+        const matrix =  gltf.scene.matrix;
+        player = new Player(model,mixer,animationMap,'idle',body,matrix)
 
         player.getBullets().forEach(bullet => {
             bullet.body.position.y = 3
