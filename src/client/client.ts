@@ -11,6 +11,7 @@ import { MySkybox } from './classes/MySkybox'
 import Nebula, { SpriteRenderer } from 'three-nebula'
 // @ts-ignore
 import json from "./particles/blue.json"
+import { Mutant } from './classes/Mutant'
 
 
 // Scene, camera, renderer, world
@@ -42,6 +43,7 @@ let player : Player = createPlayer() //Player
 let nebula : any
 const leavesMaterial : THREE.ShaderMaterial = shaderLeaves() //leaves
 
+let mutant : Mutant = createMutant() 
 
 initLight() 
 initPlane() 
@@ -119,6 +121,36 @@ function initNebula() : void {
     })
     
 }
+
+//mutant
+function createMutant() : Mutant {
+    loader.load('/models/mutant.glb',function (gltf) {
+        const model = gltf.scene
+        const gltfAnimations: THREE.AnimationClip[] = gltf.animations
+        const mixer = new THREE.AnimationMixer(model)
+        const animationMap: Map<string, THREE.AnimationAction> = new Map()
+        gltfAnimations.forEach((a:THREE.AnimationClip)=>{
+            animationMap.set(a.name,mixer.clipAction(a))
+        })
+        const shape =  new CANNON.Cylinder(1, 1, .5, 12)
+        const body = new CANNON.Body({ mass: 1, shape: shape})
+        body.position.y = 6
+        model.name = 'DragonPatron'
+        model.position.y= 2
+        model.rotateY(1)
+        model.scale.set(4,4,4)
+        model.traverse((object: any)=>{if(object.isMesh) object.castShadow = true})
+        scene.add(model)
+        world.addBody(body)
+        dragon = new DragonPatron(model,mixer,animationMap,'Flying',body)
+       // dragon.matrix = gltf.scene.matrix;
+       
+        }
+    )
+    
+    return dragon
+}
+
 // Plane
 function initPlane() : void {
     const soilBaseColor = textureLoader.load("./textures/soil/Rock_Moss_001_basecolor.jpg");
