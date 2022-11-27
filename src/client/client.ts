@@ -8,13 +8,14 @@ import CannonDebugRenderer from './utils/cannonDebugRenderer'
 import CannonUtils from './utils/cannonUtils'
 import { MySkybox } from './classes/MySkybox'
 import { PlayerParticles } from './classes/PlayerParticles'
+import { DragonPatron } from './classes/DragonPatron'
 //Scene
 const scene = new THREE.Scene()
 scene.background = null
 
 //Camera
 const camera = new THREE.PerspectiveCamera(75,window.innerWidth / window.innerHeight,0.1,2000)
-camera.position.set(0, 5, 10)
+camera.position.set(0, 5, 5)
 
 //Renderer
 const renderer = new THREE.WebGLRenderer({ antialias: true })
@@ -43,7 +44,7 @@ const loader = new GLTFLoader()
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.enableDamping = true
 orbitControls.minDistance = 5
-orbitControls.maxDistance = 15
+orbitControls.maxDistance = 25
 orbitControls.enablePan = false
 orbitControls.maxPolarAngle = Math.PI / 2 - 0.05
 orbitControls.update();
@@ -71,6 +72,7 @@ function animate() : void {
    // player ? player.update(delta,keysPressed) : null
     player ? player.update(delta,keysPressed,mouseButtonsPressed) : null
     player ? playerParticles.update(player,delta) : null
+    dragon ? dragon.update(delta, player.getModel().position,player.getModel().rotation) : null
     cannonDebugRenderer.update()
     orbitControls.update()
     mySkybox.update( camera );
@@ -96,18 +98,48 @@ function createPlayer() : Player {
         })
         const shape =  new CANNON.Cylinder(1, 1, 4, 12)
         const body = new CANNON.Body({ mass: 1, shape: shape})
-        body.position.y = 7
+        body.position.y = 3
         model.name = 'Warlock'
         model.traverse((object: any)=>{if(object.isMesh) object.castShadow = true})
         scene.add(model)
         world.addBody(body)
         player = new Player(model,mixer,animationMap,'idle',body)
         player.matrix = gltf.scene.matrix;
-       // console.log(player.matrix)
+        console.log(animationMap)
         }
     )
     
     return player
+}
+
+let dragon : DragonPatron = createDragon() //Player
+//dragon
+function createDragon() : DragonPatron {
+    loader.load('/models/bigboie.glb',function (gltf) {
+        const model = gltf.scene
+        const gltfAnimations: THREE.AnimationClip[] = gltf.animations
+        const mixer = new THREE.AnimationMixer(model)
+        const animationMap: Map<string, THREE.AnimationAction> = new Map()
+        gltfAnimations.forEach((a:THREE.AnimationClip)=>{
+            animationMap.set(a.name,mixer.clipAction(a))
+        })
+        const shape =  new CANNON.Cylinder(1, 1, .5, 12)
+        const body = new CANNON.Body({ mass: 1, shape: shape})
+        body.position.y = 6
+        model.name = 'DragonPatron'
+        model.position.y= 2
+        model.rotateY(1)
+        model.scale.set(4,4,4)
+        model.traverse((object: any)=>{if(object.isMesh) object.castShadow = true})
+        scene.add(model)
+        world.addBody(body)
+        dragon = new DragonPatron(model,mixer,animationMap,'Flying',body)
+       // dragon.matrix = gltf.scene.matrix;
+       
+        }
+    )
+    
+    return dragon
 }
 
 let playerParticles = createPlayerParticles();

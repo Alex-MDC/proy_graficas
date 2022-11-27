@@ -3,6 +3,7 @@ import * as CANNON from 'cannon-es'
 
 import { Model } from './Model'
 import { Matrix4 } from 'three'
+import { DragonPatron } from './DragonPatron'
 
 export class Player extends Model{
     private readonly name: string = "Warlock"
@@ -47,6 +48,7 @@ export class Player extends Model{
         const directionPressed = ['w','a','s','d'].some(key => keysPressed[key] == true)
         let attack_1 =['0'].some(key => mouseButtonsPressed[key] == true)
         let attack_2 =['2'].some(key => mouseButtonsPressed[key] == true)
+        let attack_3 =['1'].some(key => mouseButtonsPressed[key] == true)
         //attack press
         let play = '' //current anim
         if (directionPressed && this.toggleRun) {
@@ -62,6 +64,9 @@ export class Player extends Model{
         else if(attack_2){
             play = '2H_attack'
             //this.castA()
+        }else if(attack_3){
+            play = 'AOE'
+            //todo add loop
         }
         else {
             play = 'idle'
