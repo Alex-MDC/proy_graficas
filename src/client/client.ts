@@ -4,7 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {  GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 import { Player } from './classes/Player'
 import CannonDebugRenderer from './utils/cannonDebugRenderer'
-import getThreeApp from "./classes/App"
+import getThreeApp, { scene } from "./classes/App"
 import { MySkybox } from './classes/MySkybox'
 
 // @ts-ignore
@@ -68,6 +68,7 @@ function animate() : void {
     leavesMaterial.uniformsNeedUpdate = true
     player ? player.update(delta,keysPressed) : null
     nebula ? nebula.update() : null
+    mutant ? mutant.update(delta,app.scene) : null
 
     cannonDebugRenderer.update()
     orbitControls.update()
@@ -90,7 +91,7 @@ function createPlayer() : Player {
             animationMap.set(a.name,mixer.clipAction(a))
         })
 
-        const body = new CANNON.Body({ mass: 1, shape: new CANNON.Cylinder(.5, 1, 4, 12)})
+        const body = new CANNON.Body({ mass: 8, shape: new CANNON.Cylinder(.5, 1, 4, 12)})
         body.position.y = 7
         model.name = 'Warlock'
         model.traverse((object: any)=>{if(object.isMesh) object.castShadow = true})
@@ -134,21 +135,23 @@ function createMutant() : Mutant {
         })
         const shape =  new CANNON.Cylinder(1, 1, .5, 12)
         const body = new CANNON.Body({ mass: 1, shape: shape})
-        body.position.y = 6
-        model.name = 'DragonPatron'
-        model.position.y= 2
-        model.rotateY(1)
-        model.scale.set(4,4,4)
+        body.position.y = 0
+        body.position.x = 10
+        model.name = 'Mutant'
+        model.position.y= 0
+        model.position.x= 10
+        model.rotateY(-1)
+        model.scale.set(5,5,5)
         model.traverse((object: any)=>{if(object.isMesh) object.castShadow = true})
-        scene.add(model)
-        world.addBody(body)
-        dragon = new DragonPatron(model,mixer,animationMap,'Flying',body)
+        app.scene.add(model)
+        app.world.addBody(body)
+        mutant = new Mutant(model,mixer,animationMap,'idle',body)
        // dragon.matrix = gltf.scene.matrix;
-       
+      // console.log(animationMap)
         }
     )
     
-    return dragon
+    return mutant
 }
 
 // Plane
